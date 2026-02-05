@@ -9,10 +9,6 @@ ENV SERVER_NAME $SERVER_NAME
 ARG HTTP_PORT
 ENV HTTP_PORT $HTTP_PORT
 
-
-
-
-
 # Install modules and addons
 RUN mkdir -p $TOMCAT_DIR/amps
 COPY modules/amps $TOMCAT_DIR/amps

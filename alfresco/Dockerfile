@@ -20,8 +20,6 @@ COPY modules/jars $TOMCAT_DIR/webapps/alfresco/WEB-INF/lib
 RUN java -jar $TOMCAT_DIR/alfresco-mmt/alfresco-mmt*.jar install \
     $TOMCAT_DIR/amps $TOMCAT_DIR/webapps/alfresco -directory -nobackup -force
 
-
-
 # DATABASE
 ARG DB
 ENV DB $DB
@@ -43,8 +41,6 @@ RUN if [ "$DB" == "mariadb" ] ; then \
         && cp /tmp/mariadb-java-client-2.7.4.jar $TOMCAT_DIR/lib/ \
         && rm -rf /tmp/mariadb-java-client-2.7.4.jar; \
 fi
-
-
 
 # COMMS
 ARG SOLR_COMMS
@@ -82,9 +78,3 @@ RUN if [ "$SOLR_COMMS" == "https" ] ; then \
                 <\/SSLHostConfig>\n\
         <\/Connector>/g" ${TOMCAT_DIR}/conf/server.xml; \
     fi
-
-
-
-
-
-
