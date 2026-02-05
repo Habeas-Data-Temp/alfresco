@@ -6,19 +6,17 @@ services:
         ALFRESCO_TAG: ${ALFRESCO_CE_TAG}
         DB: postgres
         SOLR_COMMS: secret
+    container_name: alfresco_repository
     mem_limit: 7488m
-    depends_on:
-      postgres:
-        condition: service_healthy
     environment:
       JAVA_TOOL_OPTIONS: >-
         -Dencryption.keystore.type=JCEKS
         -Dencryption.cipherAlgorithm=DESede/CBC/PKCS5Padding
         -Dencryption.keyAlgorithm=DESede
         -Dencryption.keystore.location=/usr/local/tomcat/shared/classes/alfresco/extension/keystore/keystore
-        -Dmetadata-keystore.password=mp6yc0UD9e
-        -Dmetadata-keystore.aliases=metadata
-        -Dmetadata-keystore.metadata.password=oKIWzVdEdA
+        -Dmetadata-keystore.password=${KEYSTORE_PASSWORD}
+        -Dmetadata-keystore.aliases=${KEYSTORE_ALIAS}
+        -Dmetadata-keystore.metadata.password=${KEYSTORE_KEYPASSWORD}
         -Dmetadata-keystore.metadata.algorithm=DESede
       JAVA_OPTS: >-
         -Ddb.username=${DB_USERNAME}
@@ -61,6 +59,9 @@ services:
         -Dgoogledocs.enabled=false  
         -Ddev.email.not.sent=true  
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
       test:
         - CMD
@@ -77,6 +78,7 @@ services:
 
   transform-core-aio:
     image: alfresco/alfresco-transform-core-aio:${TRANSFORM_ENGINE_TAG}
+    container_name: alfresco_core_aio
     restart: on-failure
     mem_limit: 2048m
     environment:
@@ -102,17 +104,17 @@ services:
         SHARE_TAG: ${SHARE_TAG}
         SERVER_NAME: ${SERVER_NAME}
         HTTP_PORT: 8080
+    container_name: alfresco_share
     mem_limit: 1872m
     environment:
       REPO_HOST: "alfresco"
       REPO_PORT: "8080"
       CSRF_FILTER_REFERER: "http://localhost:8080/.*"
       CSRF_FILTER_ORIGIN: "http://localhost:8080"
-      JAVA_OPTS: "
+      JAVA_OPTS: >-
         -Dalfresco.context=alfresco
         -Dalfresco.protocol=http
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
-        "
     depends_on:
       alfresco:
         condition: service_healthy
@@ -121,6 +123,7 @@ services:
 
   postgres:
     image: postgres:${POSTGRES_TAG}
+    container_name: alfresco_database
     mem_limit: 1872m
     environment:
       - POSTGRES_PASSWORD=alfresco
@@ -152,6 +155,7 @@ services:
         ALFRESCO_COMMS: secret
         CROSS_LOCALE: "true"
         DISABLE_CONTENT_INDEXING: "false"
+    container_name: alfresco_search
     mem_limit: 3744m
     environment:
       SOLR_JAVA_MEM: "-XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80"
@@ -174,15 +178,17 @@ services:
 
   activemq:
     image: alfresco/alfresco-activemq:${ACTIVEMQ_TAG}
+    container_name: alfresco_activemq
     mem_limit: 1g
     environment:
-      ACTIVEMQ_ADMIN_LOGIN: "admin"
-      ACTIVEMQ_ADMIN_PASSWORD: "admin"
+      ACTIVEMQ_ADMIN_LOGIN: ${ACTIVEMQ_ADMIN_LOGIN}
+      ACTIVEMQ_ADMIN_PASSWORD: ${ACTIVEMQ_ADMIN_PASSWORD}
     volumes:
       - activemq-data:/opt/activemq/data
 
   content-app:
     image: alfresco/alfresco-content-app:${ACA_TAG}
+    container_name: alfresco_content_app
     mem_limit: 256m
     environment:
       APP_BASE_SHARE_URL: "http://${SERVER_NAME}:8080/#/preview/s"
@@ -191,10 +197,21 @@ services:
       alfresco:
         condition: service_healthy
 
+  transform-ocr:
+    image: angelborroy/alfresco-tengine-ocr:2.0.0
+    container_name: alfresco_transform_ocr
+    mem_limit: 1536m
+    environment:
+      JAVA_OPTS: >-
+        -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
+        -Dserver.tomcat.threads.max=4
+        -Dserver.tomcat.threads.min=1
+
   # HTTP proxy to provide HTTP Default port access to services
   # SOLR API and SOLR Web Console are protected to avoid unauthenticated access
   proxy:
     image: nginx:stable-alpine
+    container_name: alfresco_proxy
     mem_limit: 128m
     depends_on:
       - alfresco
@@ -206,15 +223,6 @@ services:
       - ./config/nginx.htpasswd:/etc/nginx/conf.d/nginx.htpasswd
     ports:
       - ${BIND_IP_NGINX:-0.0.0.0}:8080:8080
-
-  transform-ocr:
-    image: angelborroy/alfresco-tengine-ocr:2.0.0
-    mem_limit: 1536m
-    environment:
-      JAVA_OPTS: >-
-        -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
-        -Dserver.tomcat.threads.max=4
-        -Dserver.tomcat.threads.min=1
 
 volumes:
   alf-repo-data:
