@@ -56,9 +56,6 @@ services:
         -Dgoogledocs.enabled=false  
         -Ddev.email.not.sent=true  
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
-    depends_on:
-      postgres:
-        condition: service_healthy
     healthcheck:
       test:
         - CMD
@@ -119,30 +116,6 @@ services:
     volumes:
       - alf-share-logs:/usr/local/tomcat/logs
 
-  postgres:
-    image: postgres:${POSTGRES_TAG}
-    container_name: alfresco_database
-    mem_limit: 1872m
-    environment:
-      - POSTGRES_PASSWORD=alfresco
-      - POSTGRES_USER=alfresco
-      - POSTGRES_DB=alfresco
-      - PGUSER=alfresco
-    command: "
-      postgres
-      -c max_connections=200
-      -c logging_collector=on
-      -c log_min_messages=LOG
-      -c log_directory=/var/log/postgresql"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - postgres-logs:/var/log/postgresql
-
   solr6:
     build:
       context: ./search
@@ -184,17 +157,6 @@ services:
     volumes:
       - activemq-data:/opt/activemq/data
 
-  content-app:
-    image: alfresco/alfresco-content-app:${ACA_TAG}
-    container_name: alfresco_content_app
-    mem_limit: 256m
-    environment:
-      APP_BASE_SHARE_URL: "http://${SERVER_NAME}:8080/#/preview/s"
-      APP_CONFIG_PLUGIN_PROCESS_SERVICE: false
-    depends_on:
-      alfresco:
-        condition: service_healthy
-
   transform-ocr:
     image: angelborroy/alfresco-tengine-ocr:2.0.0
     container_name: alfresco_transform_ocr
@@ -215,7 +177,6 @@ services:
       - alfresco
       - solr6
       - share
-      - content-app
     volumes:
       - ./config/nginx.conf:/etc/nginx/nginx.conf
       - ./config/nginx.htpasswd:/etc/nginx/conf.d/nginx.htpasswd
@@ -227,6 +188,4 @@ volumes:
   activemq-data:
   alf-repo-logs:
   alf-share-logs:
-  postgres-data:
-  postgres-logs:
   solr-data:

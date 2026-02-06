@@ -1,6 +1,35 @@
+## Requisitos de hardware
+
+- RAM: 8GB (Mínimo absoluto), 16GB (Recomendado).
+- CPU: 4 Cores.
+- Storage: SSD é altamente recomendado devido ao processo de indexação do Solr.
+
+## Base de dados
+
+Para criar a base de dados do repositório do alfresco, acesse o `psql` do postgres da seguinte forma:
+
+```bash
+psql -U <usuario> -d <database>
+```
+
+Após isso, execute as seguintes queries:
+
+```sql
+-- cria o usuário do alfresco
+CREATE USER <usuario> WITH PASSWORD '<senha>';
+
+-- cria a base de dados para ser utilizada pelo alfresco
+CREATE DATABASE <db_name> WITH ENCODING 'UTF8' OWNER <usuario>;
+
+-- concede as permissões necessárias para o usuário do alfresco
+GRANT ALL PRIVILEGES ON DATABASE <db_name> TO <usuario>;
+```
+
 ## Alfresco Repository
 
 ### Keystore
+
+ATENÇÃO: A PERDA DA KEYSTORE RESULTA EM NÃO CONSEGUIR ACESSAR MAIS OS ARQUIVOS, uma vez que os mesmos estão criptografados e a keystore é a chave.
 
 Para configurar a keystore, usamos volumes mapeados entre o host e o volume do container. Dessa forma, coloque o arquivo `keystore` no mesmo diretório configurado pela variável de ambiente `$KEYSTORE_HOST_PATH`.
 
