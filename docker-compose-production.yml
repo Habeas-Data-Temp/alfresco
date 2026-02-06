@@ -169,19 +169,19 @@ services:
 
   # HTTP proxy to provide HTTP Default port access to services
   # SOLR API and SOLR Web Console are protected to avoid unauthenticated access
-  proxy:
-    image: nginx:stable-alpine
-    container_name: alfresco_proxy
-    mem_limit: 128m
-    depends_on:
-      - alfresco
-      - solr6
-      - share
-    volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf
-      - ./config/nginx.htpasswd:/etc/nginx/conf.d/nginx.htpasswd
-    ports:
-      - ${BIND_IP_NGINX:-0.0.0.0}:8080:8080
+  # proxy:
+  #   image: nginx:stable-alpine
+  #   container_name: alfresco_proxy
+  #   mem_limit: 128m
+  #   depends_on:
+  #     - alfresco
+  #     - solr6
+  #     - share
+  #   volumes:
+  #     - ./config/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./config/nginx.htpasswd:/etc/nginx/conf.d/nginx.htpasswd
+  #   ports:
+  #     - ${BIND_IP_NGINX:-0.0.0.0}:8080:8080
 
 volumes:
   alf-repo-data:
