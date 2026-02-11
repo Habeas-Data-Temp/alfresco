@@ -10,14 +10,11 @@ services:
     mem_limit: 7488m
     environment:
       JAVA_TOOL_OPTIONS: >-
-        -Dencryption.keystore.type=JCEKS
-        -Dencryption.cipherAlgorithm=DESede/CBC/PKCS5Padding
-        -Dencryption.keyAlgorithm=DESede
+        -Dencryption.keystore.type=PKCS12
         -Dencryption.keystore.location=/usr/local/tomcat/shared/classes/alfresco/extension/keystore/keystore
-        -Dmetadata-keystore.password=mp6yc0UD9e
-        -Dmetadata-keystore.aliases=metadata
-        -Dmetadata-keystore.metadata.password=oKIWzVdEdA
-        -Dmetadata-keystore.metadata.algorithm=DESede
+        -Dmetadata-keystore.password=${KEYSTORE_PASSWORD}
+        -Dmetadata-keystore.aliases=${KEYSTORE_ALIAS}
+        -Dmetadata-keystore.metadata.password=${KEYSTORE_KEYPASSWORD}
       JAVA_OPTS: >-
         -Ddb.username=${DB_USERNAME}
         -Ddb.password=${DB_PASSWORD}
@@ -72,6 +69,8 @@ services:
     volumes:
       - alf-repo-data:/usr/local/tomcat/alf_data
       - alf-repo-logs:/usr/local/tomcat/logs
+      - ${KEYSTORE_HOST_PATH}:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
+      - ./alfresco/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
 
   transform-core-aio:
     image: alfresco/alfresco-transform-core-aio:${TRANSFORM_ENGINE_TAG}

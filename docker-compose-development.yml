@@ -75,6 +75,7 @@ services:
     volumes:
       - alf-repo-data:/usr/local/tomcat/alf_data
       - alf-repo-logs:/usr/local/tomcat/logs
+      - ./alfresco/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
 
   transform-core-aio:
     image: alfresco/alfresco-transform-core-aio:${TRANSFORM_ENGINE_TAG}

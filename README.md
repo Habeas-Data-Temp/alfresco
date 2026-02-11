@@ -84,9 +84,13 @@ environment:
 ...
 ```
 
+## Web Scripts
+
+Página inicial: <host>/alfresco/service/index
+
 ## Comandos úteis
 
 ```bash
 # para copiar os arquivos de uma máquina local para o servidor remoto
-scp -r <dir_or_file> <usuario>@<ip-do-servidor>:<dir_remoto>
+scp -r <dir_host> <usuario>@<ip-do-servidor>:<dir_remoto>
 ```

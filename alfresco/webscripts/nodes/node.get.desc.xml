@@ -1,0 +1,10 @@
+<webscript>
+    <shortname>Informações Detalhadas do Node</shortname>
+    <description>Retorna metadados do nó e seus filhos com suporte a aliases e path relativo</description>
+    <url>
+        /ged/node/{nodeId}?skipCount={skipCount?}&amp;maxItems={maxItems?}&amp;relativeTo={relativeTo?}
+    </url>
+    <format default="json">argument</format>
+    <authentication>user</authentication>
+    <transaction>required</transaction>
+</webscript>
