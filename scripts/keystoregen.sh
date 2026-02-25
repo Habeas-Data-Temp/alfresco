@@ -4,6 +4,7 @@
 
 KEYSTORE_PASS=""
 
+# gera uma keystore PKCS12
 ./run.sh \
 	-alfrescoversion "community" \
 	-keysize 4096 \
