@@ -7,7 +7,7 @@ services:
         DB: postgres
         SOLR_COMMS: secret
     ports:
-      - "8080:8080"
+      - "${ALFRESCO_PORT}:8080"
     mem_limit: 7488m
     environment:
       JAVA_TOOL_OPTIONS: >-
@@ -103,7 +103,7 @@ services:
         SERVER_NAME: ${SERVER_NAME}
         HTTP_PORT: 8080
     ports:
-      - "8081:8080"
+      - "${SHARE_PORT}:8080"
     mem_limit: 1872m
     environment:
       REPO_HOST: "alfresco"
@@ -167,6 +167,21 @@ services:
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
         -Dserver.tomcat.threads.max=4
         -Dserver.tomcat.threads.min=1
+
+  content-app:
+    image: alfresco/alfresco-content-app:${ACA_TAG}
+    ports:
+      - "${CONTENT_APP_PORT}:8080"
+    mem_limit: 256m
+    environment:
+      APP_BASE_SHARE_URL: "http://${SERVER_NAME}:8080/#/preview/s"
+      APP_CONFIG_PLUGIN_PROCESS_SERVICE: false
+      APP_CONFIG_ECM_HOST: "http://${SERVER_NAME}:8080"
+      APP_CONFIG_PROVIDER: "ECM"
+      APP_CONFIG_AUTH_TYPE: "BASIC"
+    depends_on:
+      alfresco:
+        condition: service_healthy
 
 volumes:
   alf-repo-data:
