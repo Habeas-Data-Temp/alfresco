@@ -1,5 +1,6 @@
 services:
   alfresco:
+    container_name: prod_repo
     build:
       context: ./alfresco
       args:
@@ -76,6 +77,7 @@ services:
       # - alfresco-webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
 
   transform-core-aio:
+    container_name: prod_transform-core
     image: alfresco/alfresco-transform-core-aio:${TRANSFORM_ENGINE_TAG}
     restart: on-failure
     mem_limit: 2048m
@@ -96,6 +98,7 @@ services:
         -Dlogging.level.org.apache.pdfbox.pdmodel.font.PDCIDFont=FATAL
 
   share:
+    container_name: prod_share
     build:
       context: ./share
       args:
@@ -121,6 +124,7 @@ services:
       - alf-share-logs:/usr/local/tomcat/logs
 
   solr6:
+    container_name: prod_search
     build:
       context: ./search
       args:
@@ -151,6 +155,7 @@ services:
       - solr-data:/opt/alfresco-search-services/data
 
   activemq:
+    container_name: prod_activemq
     image: alfresco/alfresco-activemq:${ACTIVEMQ_TAG}
     mem_limit: 1g
     environment:
@@ -160,6 +165,7 @@ services:
       - activemq-data:/opt/activemq/data
 
   transform-ocr:
+    container_name: prod_transform-ocr
     image: angelborroy/alfresco-tengine-ocr:2.0.0
     mem_limit: 1536m
     environment:
@@ -169,6 +175,7 @@ services:
         -Dserver.tomcat.threads.min=1
 
   content-app:
+    container_name: prod_content-app
     image: alfresco/alfresco-content-app:${ACA_TAG}
     ports:
       - "${CONTENT_APP_PORT}:8080"
@@ -182,6 +189,21 @@ services:
     depends_on:
       alfresco:
         condition: service_healthy
+
+  proxy:
+    container_name: prod_proxy
+    image: nginx:stable-alpine
+    mem_limit: 128m
+    depends_on:
+      - alfresco
+      - solr6
+      - share
+      - content-app
+    volumes:
+      - ./config/nginx-development.conf:/etc/nginx/nginx.conf
+      - ./config/nginx.htpasswd:/etc/nginx/conf.d/nginx.htpasswd
+    ports:
+      - ${BIND_IP_NGINX:-0.0.0.0}:8080:8080
 
 volumes:
   alf-repo-data:
