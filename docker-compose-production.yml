@@ -6,8 +6,6 @@ services:
         ALFRESCO_TAG: ${ALFRESCO_CE_TAG}
         DB: postgres
         SOLR_COMMS: secret
-    ports:
-      - "${ALFRESCO_PORT}:8080"
     mem_limit: 7488m
     environment:
       JAVA_TOOL_OPTIONS: >-
@@ -75,6 +73,11 @@ services:
       - /opt/alfresco/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
       # - ${ALFRESCO_VOLUME_BASE_PATH}/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
       # - alfresco-webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alfresco-repo.rule=Host(`${DOMAIN}`) && PathPrefix(`/ged`)"
+      - "traefik.http.routers.alfresco-repo.entryPoints=http,https"
+      - "traefik.http.services.alfresco-repo.loadbalancer.server.port=8080"
 
   transform-core-aio:
     image: alfresco/alfresco-transform-core-aio:${TRANSFORM_ENGINE_TAG}
@@ -103,8 +106,6 @@ services:
         SHARE_TAG: ${SHARE_TAG}
         SERVER_NAME: ${SERVER_NAME}
         HTTP_PORT: 8080
-    ports:
-      - "${SHARE_PORT}:8080"
     mem_limit: 1872m
     environment:
       REPO_HOST: "alfresco"
@@ -120,6 +121,14 @@ services:
         condition: service_healthy
     volumes:
       - alf-share-logs:/usr/local/tomcat/logs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.share.rule=Host(`${DOMAIN}`) && PathPrefix(`/share`)"
+      - "traefik.http.routers.share.entryPoints=http,https"
+      # Aplica a restrição de IP apenas aqui
+      - "traefik.http.routers.share.middlewares=internal-whitelist"
+      - "traefik.http.middlewares.internal-whitelist.ipwhitelist.sourcerange=127.0.0.1/32, 191.5.38.15/32, 45.183.0.193/32, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16"
+      - "traefik.http.services.share.loadbalancer.server.port=8080"
 
   solr6:
     build:
@@ -171,8 +180,6 @@ services:
 
   content-app:
     image: alfresco/alfresco-content-app:${ACA_TAG}
-    ports:
-      - "${CONTENT_APP_PORT}:8080"
     mem_limit: 256m
     environment:
       APP_BASE_SHARE_URL: "http://${SERVER_NAME}:8080/#/preview/s"
@@ -183,6 +190,13 @@ services:
     depends_on:
       alfresco:
         condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.content.rule=Host(`${DOMAIN}`) && PathPrefix(`/content-app`)"
+      - "traefik.http.routers.content.entryPoints=http,https"
+      # Reutiliza a mesma restrição de IP
+      - "traefik.http.routers.content.middlewares=internal-whitelist"
+      - "traefik.http.services.content.loadbalancer.server.port=8080"
 
 volumes:
   alf-repo-data:
