@@ -75,7 +75,7 @@ services:
       # - alfresco-webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.alfresco-repo.rule=Host(`${DOMAIN}`) && PathPrefix(`/ged`)"
+      - "traefik.http.routers.alfresco-repo.rule=Host(`http://alfresco.191.5.38.15.sslip.io`) && PathPrefix(`/alfresco`)"
       - "traefik.http.routers.alfresco-repo.entryPoints=http,https"
       - "traefik.http.services.alfresco-repo.loadbalancer.server.port=8080"
 
@@ -123,7 +123,7 @@ services:
       - alf-share-logs:/usr/local/tomcat/logs
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.share.rule=Host(`${DOMAIN}`) && PathPrefix(`/share`)"
+      - "traefik.http.routers.share.rule=Host(`http://alfresco.191.5.38.15.sslip.io`) && PathPrefix(`/share`)"
       - "traefik.http.routers.share.entryPoints=http,https"
       # Aplica a restrição de IP apenas aqui
       - "traefik.http.routers.share.middlewares=internal-whitelist"
@@ -192,7 +192,7 @@ services:
         condition: service_healthy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.content.rule=Host(`${DOMAIN}`) && PathPrefix(`/content-app`)"
+      - "traefik.http.routers.content.rule=Host(`http://alfresco.191.5.38.15.sslip.io`) && PathPrefix(`/content-app`)"
       - "traefik.http.routers.content.entryPoints=http,https"
       # Reutiliza a mesma restrição de IP
       - "traefik.http.routers.content.middlewares=internal-whitelist"
