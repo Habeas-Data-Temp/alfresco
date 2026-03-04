@@ -69,9 +69,11 @@ services:
     volumes:
       - alf-repo-data:/usr/local/tomcat/alf_data
       - alf-repo-logs:/usr/local/tomcat/logs
-      - ${ALFRESCO_VOLUME_BASE_PATH}/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
+      - /opt/alfresco/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
+      # - ${ALFRESCO_VOLUME_BASE_PATH}/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
       # - alfresco-keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
-      - ${ALFRESCO_VOLUME_BASE_PATH}/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
+      - /opt/alfresco/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
+      # - ${ALFRESCO_VOLUME_BASE_PATH}/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
       # - alfresco-webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
 
   transform-core-aio:
