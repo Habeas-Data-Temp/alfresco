@@ -29,7 +29,7 @@ services:
         -Dsolr.secureComms=secret
         -Dsolr.baseUrl=/solr
         -Dindex.subsystem.name=solr6
-        -Dsolr.sharedSecret=uhcklrwts6  
+        -Dsolr.sharedSecret=${SOLR_SECRET}  
         -Dalfresco.host=${SERVER_NAME}
         -Dalfresco.port=8080
         -Dapi-explorer.url=http://${SERVER_NAME}:8080/api-explorer
@@ -42,7 +42,6 @@ services:
         -Dmessaging.broker.username=admin
         -Dmessaging.broker.password=admin   
         -Ddeployment.method=DOCKER_COMPOSE
-        -Dcsrf.filter.enabled=false 
         -Dopencmis.server.override=true
         -Dopencmis.server.value=http://${SERVER_NAME}:8080
         -DlocalTransform.core-aio.url=http://transform-core-aio:8090/
@@ -137,13 +136,13 @@ services:
       SOLR_ALFRESCO_HOST: "alfresco"
       SOLR_ALFRESCO_PORT: "8080"
       #Alfresco needs to know how to call solr
-      SOLR_SOLR_HOST: "alfresco_search"
+      SOLR_SOLR_HOST: "solr6"
       SOLR_SOLR_PORT: "8983"
       #Create the default alfresco and archive cores
       SOLR_CREATE_ALFRESCO_DEFAULTS: "alfresco,archive"
       SOLR_OPTS: >-
         -XX:-UseLargePages
-        -Dalfresco.secureComms.secret=uhcklrwts6
+        -Dalfresco.secureComms.secret=${SOLR_SECRET}
     depends_on:
       alfresco:
         condition: service_healthy
