@@ -29,19 +29,19 @@ services:
         -Dindex.subsystem.name=solr6
         -Dsolr.sharedSecret=${SOLR_SECRET}
         -Dalfresco.host=${SERVER_NAME}
-        -Dalfresco.port=8080
-        -Dapi-explorer.url=http://${SERVER_NAME}:8080/api-explorer
-        -Dalfresco.protocol=http
+        -Dalfresco.port=443
+        -Dapi-explorer.url=https://${SERVER_NAME}/api-explorer
+        -Dalfresco.protocol=https
         -Dshare.host=${SERVER_NAME}
-        -Dshare.port=8080
-        -Dshare.protocol=http
-        -Daos.baseUrlOverwrite=http://${SERVER_NAME}/alfresco/aos
+        -Dshare.port=443
+        -Dshare.protocol=https
+        -Daos.baseUrlOverwrite=https://${SERVER_NAME}/alfresco/aos
         -Dmessaging.broker.url="failover:(nio://activemq:61616)?timeout=3000&jms.useCompression=true"
         -Dmessaging.broker.username=admin
         -Dmessaging.broker.password=admin
         -Ddeployment.method=DOCKER_COMPOSE
         -Dopencmis.server.override=true
-        -Dopencmis.server.value=http://${SERVER_NAME}:8080
+        -Dopencmis.server.value=https://${SERVER_NAME}
         -DlocalTransform.core-aio.url=http://transform-core-aio:8090/
         -Dhttpclient.config.transform.connectionRequestTimeout=500000
         -DlocalTransform.ocr.url=http://transform-ocr:8090/
@@ -106,16 +106,18 @@ services:
       args:
         SHARE_TAG: ${SHARE_TAG}
         SERVER_NAME: ${SERVER_NAME}
-        HTTP_PORT: 8080
+        HTTP_PORT: 443
     mem_limit: 1872m
     environment:
       REPO_HOST: "alfresco"
       REPO_PORT: "8080"
-      CSRF_FILTER_REFERER: "http://${SERVER_NAME}:.*/.*"
-      CSRF_FILTER_ORIGIN: "http://${SERVER_NAME}:*"
+      CSRF_FILTER_REFERER: "https://${SERVER_NAME}/.*"
+      CSRF_FILTER_ORIGIN: "https://${SERVER_NAME}"
       JAVA_OPTS: >-
         -Dalfresco.context=alfresco
-        -Dalfresco.protocol=http
+        -Dalfresco.host=${SERVER_NAME}
+        -Dalfresco.protocol=https
+        -Dalfresco.port=443
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
     depends_on:
       alfresco:
@@ -183,9 +185,9 @@ services:
     image: alfresco/alfresco-content-app:${ACA_TAG}
     mem_limit: 256m
     environment:
-      APP_BASE_SHARE_URL: "http://${SERVER_NAME}:8080/#/preview/s"
+      APP_BASE_SHARE_URL: "https://${SERVER_NAME}/#/preview/s"
       APP_CONFIG_PLUGIN_PROCESS_SERVICE: false
-      APP_CONFIG_ECM_HOST: "http://${SERVER_NAME}:8080"
+      APP_CONFIG_ECM_HOST: "https://${SERVER_NAME}"
       APP_CONFIG_PROVIDER: "ECM"
       APP_CONFIG_AUTH_TYPE: "BASIC"
     depends_on:
