@@ -65,7 +65,8 @@ services:
       retries: 3
       start_period: 1m
     volumes:
-      - alf-repo-data:/usr/local/tomcat/alf_data
+      # - alf-repo-data:/usr/local/tomcat/alf_data
+      - /opt/alfresco/repo-data:/usr/local/tomcat/alf_data
       - alf-repo-logs:/usr/local/tomcat/logs
       - /opt/alfresco/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
       # - ${ALFRESCO_VOLUME_BASE_PATH}/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
@@ -199,7 +200,7 @@ services:
       - "traefik.http.services.content.loadbalancer.server.port=8080"
 
 volumes:
-  alf-repo-data:
+  # alf-repo-data:
   activemq-data:
   alf-repo-logs:
   alf-share-logs:
