@@ -6,6 +6,7 @@ services:
         ALFRESCO_TAG: ${ALFRESCO_CE_TAG}
         DB: postgres
         SOLR_COMMS: secret
+    user: "1000:1000"
     mem_limit: 7488m
     environment:
       JAVA_TOOL_OPTIONS: >-
