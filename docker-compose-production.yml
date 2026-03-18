@@ -18,7 +18,7 @@ services:
         -Ddb.username=${DB_USERNAME}
         -Ddb.password=${DB_PASSWORD}
         -Ddb.driver=org.postgresql.Driver
-        -Ddb.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}  
+        -Ddb.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
         -Dalfresco_user_store.adminpassword=209c6174da490caeb422f3fa5a7ae634
         -Dsystem.preferred.password.encoding=bcrypt10
         -Dsolr.host=solr6
@@ -27,18 +27,18 @@ services:
         -Dsolr.secureComms=secret
         -Dsolr.baseUrl=/solr
         -Dindex.subsystem.name=solr6
-        -Dsolr.sharedSecret=${SOLR_SECRET}  
+        -Dsolr.sharedSecret=${SOLR_SECRET}
         -Dalfresco.host=${SERVER_NAME}
         -Dalfresco.port=8080
         -Dapi-explorer.url=http://${SERVER_NAME}:8080/api-explorer
-        -Dalfresco.protocol=http 
+        -Dalfresco.protocol=http
         -Dshare.host=${SERVER_NAME}
         -Dshare.port=8080
-        -Dshare.protocol=http 
+        -Dshare.protocol=http
         -Daos.baseUrlOverwrite=http://${SERVER_NAME}/alfresco/aos
         -Dmessaging.broker.url="failover:(nio://activemq:61616)?timeout=3000&jms.useCompression=true"
         -Dmessaging.broker.username=admin
-        -Dmessaging.broker.password=admin   
+        -Dmessaging.broker.password=admin
         -Ddeployment.method=DOCKER_COMPOSE
         -Dopencmis.server.override=true
         -Dopencmis.server.value=http://${SERVER_NAME}:8080
@@ -46,13 +46,13 @@ services:
         -Dhttpclient.config.transform.connectionRequestTimeout=500000
         -DlocalTransform.ocr.url=http://transform-ocr:8090/
         -Dhttpclient.config.transform.socketTimeout=500000
-        -Dhttpclient.config.transform.connectionTimeout=500000 
+        -Dhttpclient.config.transform.connectionTimeout=500000
         -Dcsrf.filter.enabled=false
         -Dalfresco.restApi.basicAuthScheme=true
         -Dauthentication.protection.enabled=false
         -XX:+UseG1GC -XX:+UseStringDeduplication
-        -Dgoogledocs.enabled=false  
-        -Ddev.email.not.sent=true  
+        -Dgoogledocs.enabled=false
+        -Ddev.email.not.sent=true
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
     healthcheck:
       test:
