@@ -182,26 +182,6 @@ services:
         -Dserver.tomcat.threads.max=4
         -Dserver.tomcat.threads.min=1
 
-  content-app:
-    image: alfresco/alfresco-content-app:${ACA_TAG}
-    mem_limit: 256m
-    environment:
-      APP_BASE_SHARE_URL: "https://${SERVER_NAME}/#/preview/s"
-      APP_CONFIG_PLUGIN_PROCESS_SERVICE: false
-      APP_CONFIG_ECM_HOST: "https://${SERVER_NAME}"
-      APP_CONFIG_PROVIDER: "ECM"
-      APP_CONFIG_AUTH_TYPE: "BASIC"
-    depends_on:
-      alfresco:
-        condition: service_healthy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.content.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/content-app`)"
-      - "traefik.http.routers.content.entryPoints=http,https"
-      # Reutiliza a mesma restrição de IP
-      - "traefik.http.routers.content.middlewares=internal-whitelist"
-      - "traefik.http.services.content.loadbalancer.server.port=8080"
-
 volumes:
   # alf-repo-data:
   activemq-data:

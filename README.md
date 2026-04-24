@@ -71,6 +71,25 @@ sudo chown -R 999:999 <keystore_dir>
 sudo chmod -R 700 <keystore_dir>
 ```
 
+**Coolify não entendendo bind mount através de variáveis de ambiente**: Esse erro aparentemente ocorre somente com o coolify, onde um bind mount configurado usando variáveis de ambiente não é entendido pela ferramenta.
+Para solucionar esse problema, utilize o caminho absoluto do host ao invés de variáveis de ambiente, por exemplo:
+
+```yml
+# ao invés de
+volumes:
+  - ${ALFRESCO_VOLUME_BASE_PATH}/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
+
+# usar
+volumes:
+  - /opt/alfresco/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
+```
+
+Caso seja necessário validar se a keystore está com os binários corretos (o erro acima criava uma keystore mas com os binários incorretos), verifique através do comando, dentro do container do alfresco:
+
+```bash
+head -c 20 keystore | od -t x1
+```
+
 ## Solr6 (Search service)
 
 #### Erros conhecidos
@@ -94,3 +113,62 @@ Página inicial: <host>/alfresco/service/index
 # para copiar os arquivos de uma máquina local para o servidor remoto
 scp -r <dir_host> <usuario>@<ip-do-servidor>:<dir_remoto>
 ```
+
+## Apache
+
+Atualmente temos o apache como proxy na frente devido a aplicações legado. Para que o apache redirecione o trafégo que chega para o coolify quando não encontrar o serviço registrado no apache, essa configuração é necessário:
+
+Crie um arquivo `/etc/apache2/sites-available/alfresco.conf` com o seguinte texto:
+
+```conf
+<VirtualHost *:80>
+    ServerName ged.habeasdata.com.br
+
+    # Redireciona tudo para HTTPS de forma permanente
+    Redirect permanent / https://ged.habeasdata.com.br/
+</VirtualHost>
+```
+
+```conf
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    ServerName ged.habeasdata.com.br
+
+    AllowEncodedSlashes NoDecode
+
+    # Passa o IP real do usuário - proxy
+    ProxyPreserveHost On
+    # Estas 3 linhas garantem que o IP real chegue ao proxy
+    ProxyAddHeaders On
+    RequestHeader set X-Forwarded-For %{REMOTE_ADDR}s
+    RequestHeader set X-Forwarded-Proto "https"
+    RequestHeader set X-Forwarded-Port "443"
+
+    # Garante que o IP chegue corretamente
+    RequestHeader set X-Real-IP %{REMOTE_ADDR}s
+
+    ProxyPassReverseCookiePath / /
+    Header edit Location ^http:// https://
+
+    # Redireciona o tráfego
+    # O "nocanon" impede o Apache de decodificar o %2F para /
+    ProxyPass / http://192.168.200.226:80/ nocanon
+    ProxyPassReverse / http://192.168.200.226:80/
+
+    ErrorLog ${APACHE_LOG_DIR}/ged-error.log
+    CustomLog ${APACHE_LOG_DIR}/ged-access.log combined
+
+SSLCertificateFile /etc/letsencrypt/live/ged.habeasdata.com.br/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/ged.habeasdata.com.br/privkey.pem
+Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
+</IfModule>
+```
+
+## Migrando do Apache para o Traefik
+
+Quando migrarmos todas as aplicações para o traefik, precisamos alterar o seguinte no alfresco:
+
+- no painel coolify da aplicação -> configuration -> advanced -> general -> habilite force HTTPS
+- no painel coolify da aplicação -> configuration -> general -> alter o domínio de http://ged.habeasdata.com.br para https://ged.habeasdata.com.br
+-

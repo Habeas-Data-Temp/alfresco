@@ -16,3 +16,18 @@ KEYSTORE_PASS=""
 	-repocertdname "/C=BR/ST=MG/L=Betim/O=Habeas Data Soluções em Informática LTDA./OU=TI/CN=Habeas Data Alfresco Repository" \
 	-solrcertdname "/C=BR/ST=MG/L=Betim/O=Habeas Data Soluções em Informática LTDA./OU=TI/CN=Habeas Data Alfresco Repository Client" \
 	-browsercertdname "/C=BR/ST=MG/L=Betim/O=Habeas Data Soluções em Informática LTDA./OU=TI/CN=Habeas Data Alfresco Browser Client"
+
+keytool -genkeypair \
+    -alias metadata \
+    -keyalg RSA \
+    -keysize 4096 \
+    -sigalg SHA256withRSA \
+    -validity 3650 \
+    -storetype PKCS12 \
+    -keystore keystore \
+    -storepass teste \
+    -keypass teste \
+    -dname "CN=Habeas Data Alfresco Repository, OU=TI, O=Habeas Data Soluções em Informática LTDA., L=Betim, ST=MG, C=BR"
+
+# para validar se foi gerada corretamente
+keytool -list -v -keystore ./keystore -storetype PKCS12
