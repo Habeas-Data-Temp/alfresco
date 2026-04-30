@@ -127,7 +127,7 @@ services:
         condition: service_healthy
     volumes:
       - alf-share-logs:/usr/local/tomcat/logs
-      - /opt/alfresco/share/web-extension/site-data/extensions:/usr/local/tomcat/shared/classes/alfresco/web-extension/site-data/extensions
+      # - /opt/alfresco/share/web-extension/site-data/extensions:/usr/local/tomcat/shared/classes/alfresco/web-extension/site-data/extensions
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.share.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/share`)"

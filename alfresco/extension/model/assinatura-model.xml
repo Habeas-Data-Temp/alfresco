@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.alfresco.org/model/dictionary/1.0" name="sign:Assinatura">
+<model xmlns="http://www.alfresco.org/model/dictionary/1.0" name="sign:assinatura">
     <author>Administrator</author>
     <imports>
         <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
@@ -15,30 +15,13 @@
             <title>Assinado Digitalmente</title>
             <description>Indica que o documento foi assinado digitalmente</description>
             <properties>
-                <property name="sign:signerName">
-                    <title>Nome do assinante</title>
-                    <type>d:text</type>
+                <property name="sign:signers">
+                    <type>d:mltext</type>
                     <mandatory>true</mandatory>
+                    <multiple>true</multiple>
                     <index enabled="true">
                         <tokenised>TRUE</tokenised>
                         <facetable>false</facetable>
-                    </index>
-                </property>
-                <property name="sign:signerDoc">
-                    <title>Documento do assinante</title>
-                    <type>d:text</type>
-                    <mandatory>false</mandatory>
-                    <index enabled="true">
-                        <tokenised>TRUE</tokenised>
-                        <facetable>false</facetable>
-                    </index>
-                </property>
-                <property name="sign:signatureDate">
-                    <title>Data da assinatura</title>
-                    <type>d:datetime</type>
-                    <mandatory>true</mandatory>
-                    <index enabled="true">
-                        <tokenised>TRUE</tokenised>
                     </index>
                 </property>
             </properties>
