@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.alfresco.org/model/dictionary/1.0" name="sign:Assinatura">
+    <author>Administrator</author>
+    <imports>
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+    </imports>
+    <namespaces>
+        <namespace uri="http://phd.habeasdata.com.br/model/sign/1.0" prefix="sign" />
+    </namespaces>
+    <data-types />
+    <constraints />
+    <types />
+    <aspects>
+        <aspect name="sign:signed">
+            <title>Assinado Digitalmente</title>
+            <description>Indica que o documento foi assinado digitalmente</description>
+            <properties>
+                <property name="sign:signerName">
+                    <title>Nome do assinante</title>
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                        <facetable>false</facetable>
+                    </index>
+                </property>
+                <property name="sign:signerDoc">
+                    <title>Documento do assinante</title>
+                    <type>d:text</type>
+                    <mandatory>false</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                        <facetable>false</facetable>
+                    </index>
+                </property>
+                <property name="sign:signatureDate">
+                    <title>Data da assinatura</title>
+                    <type>d:datetime</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                    </index>
+                </property>
+            </properties>
+            <associations />
+            <overrides />
+            <mandatory-aspects />
+        </aspect>
+    </aspects>
+</model>
