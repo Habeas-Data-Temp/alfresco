@@ -75,7 +75,7 @@ services:
       - /opt/alfresco/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
       # - ${ALFRESCO_VOLUME_BASE_PATH}/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
       # - alfresco-webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
-      - /opt/alfresco/extension:/usr/local/tomcat/shared/classes/alfresco/extension
+      # - /opt/alfresco/extension:/usr/local/tomcat/shared/classes/alfresco/extension
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.alfresco-repo.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/alfresco`)"
@@ -126,7 +126,7 @@ services:
         condition: service_healthy
     volumes:
       - alf-share-logs:/usr/local/tomcat/logs
-      - /opt/alfresco/share/web-extension:/usr/local/tomcat/shared/classes/alfresco/web-extension
+      # - /opt/alfresco/share/web-extension/site-data:/usr/local/tomcat/shared/classes/alfresco/web-extension
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.share.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/share`)"
