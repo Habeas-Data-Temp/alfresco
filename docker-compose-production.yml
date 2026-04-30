@@ -67,15 +67,16 @@ services:
       start_period: 1m
     volumes:
       # - alf-repo-data:/usr/local/tomcat/alf_data
-      - /opt/alfresco/repo-data:/usr/local/tomcat/alf_data
       - alf-repo-logs:/usr/local/tomcat/logs
+      - /opt/alfresco/repo-data:/usr/local/tomcat/alf_data
       - /opt/alfresco/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
       # - ${ALFRESCO_VOLUME_BASE_PATH}/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
-      # - alfresco-keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
       - /opt/alfresco/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
       # - ${ALFRESCO_VOLUME_BASE_PATH}/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
-      # - alfresco-webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
-      # - /opt/alfresco/extension:/usr/local/tomcat/shared/classes/alfresco/extension
+      - /opt/alfresco/extension/model:/usr/local/tomcat/shared/classes/alfresco/extension/model
+      # utilizando dois volumes, evitamos que seja necessário mapear cada contexto individualmente
+      - /opt/alfresco/extension/contexts:/usr/local/tomcat/shared/classes/alfresco/extension/custom-contexts
+      - /opt/alfresco/extension/main-custom-context.xml:/usr/local/tomcat/shared/classes/alfresco/extension/main-custom-context.xml
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.alfresco-repo.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/alfresco`)"
@@ -126,7 +127,7 @@ services:
         condition: service_healthy
     volumes:
       - alf-share-logs:/usr/local/tomcat/logs
-      # - /opt/alfresco/share/web-extension/site-data:/usr/local/tomcat/shared/classes/alfresco/web-extension
+      - /opt/alfresco/share/web-extension/site-data/extensions:/usr/local/tomcat/shared/classes/alfresco/web-extension/site-data/extensions
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.share.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/share`)"
