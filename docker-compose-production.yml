@@ -15,6 +15,7 @@ services:
         -Dmetadata-keystore.password=${KEYSTORE_PASSWORD}
         -Dmetadata-keystore.aliases=${KEYSTORE_ALIAS}
         -Dmetadata-keystore.metadata.password=${KEYSTORE_KEYPASSWORD}
+        -Dencryption.keystore.validate=false
       JAVA_OPTS: >-
         -Ddb.username=${DB_USERNAME}
         -Ddb.password=${DB_PASSWORD}
