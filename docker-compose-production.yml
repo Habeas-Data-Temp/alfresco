@@ -68,7 +68,7 @@ services:
     volumes:
       # - alf-repo-data:/usr/local/tomcat/alf_data
       - alf-repo-logs:/usr/local/tomcat/logs
-      - /opt/docker/alfresco/repo-data:/usr/local/tomcat/alf_data
+      - /opt/docker/data/alfresco/repo-data:/usr/local/tomcat/alf_data
       - /opt/docker/alfresco/keystore:/usr/local/tomcat/shared/classes/alfresco/extension/keystore:ro
       - /opt/docker/alfresco/webscripts:/usr/local/tomcat/shared/classes/alfresco/extension/templates/webscripts/custom
       - /opt/docker/alfresco/extension/model:/usr/local/tomcat/shared/classes/alfresco/extension/model
