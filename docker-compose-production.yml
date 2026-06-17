@@ -20,6 +20,7 @@ services:
         -Ddb.password=${DB_PASSWORD}
         -Ddb.driver=org.postgresql.Driver
         -Ddb.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+        -Dhibernate.default_schema=${DB_SCHEMA}
         -Dalfresco_user_store.adminpassword=209c6174da490caeb422f3fa5a7ae634
         -Dsystem.preferred.password.encoding=bcrypt10
         -Dsolr.host=solr6
