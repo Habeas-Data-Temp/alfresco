@@ -25,6 +25,7 @@ services:
         -Dhibernate.default_schema=${DB_SCHEMA}
         -Dalfresco_user_store.adminpassword=209c6174da490caeb422f3fa5a7ae634
         -Dsystem.preferred.password.encoding=bcrypt10
+        -Dsystem.bootstrap.config_check.strict=${ENABLE_INTEGRITY_CHECK}
         -Dsolr.host=solr6
         -Dsolr.port=8983
         -Dsolr.port.ssl=8983
