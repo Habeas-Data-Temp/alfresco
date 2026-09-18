@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker-compose -f docker-compose-development.yml up \
+docker-compose -f docker-compose-dev.yml up \
     --build \
     --force-recreate \
     -d

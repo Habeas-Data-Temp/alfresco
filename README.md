@@ -92,6 +92,34 @@ head -c 20 keystore | od -t x1
 
 ## Solr6 (Search service)
 
+### Indíces
+
+As vezes pode ser necessário reiniciar os indíces do Solr. Para fazer isso, garanta que o script localizado em `./scripts/dispose-solr.sh` esteja no diretório do host (geralmente `/opt/docker/alfresco/scripts/dispose-solr.sh`).
+
+Antes de executar o script, garanta que o container está parado e que você tenha o nome do volume em mãos.
+
+```bash
+sudo docker stop <container_id>
+```
+
+Para saber o nome do volume, execute:
+
+```bash
+sudo docker volume ls
+```
+
+Após isso, basta executar o script:
+
+```bash
+sudo bash /opt/docker/alfresco/scripts/dispose-solr.sh <volume_name>
+```
+
+Feito isso, basta reiniciar o container do solr diretamente:
+
+```bash
+sudo docker start <container_id>
+```
+
 #### Erros conhecidos
 
 **solr host**: Caso o repositório do alfresco não consiga se comunicar com o serviço de pesquisa (solr6), verifique se o `host do solr` está definido com o mesmo nome do serviço do `docker-compose`. Caso tenha definido um nome para o container, utilize o nome definido. Por exemplo:
