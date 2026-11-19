@@ -83,7 +83,7 @@ services:
       - /opt/docker/alfresco/extension/main-custom-context.xml:/usr/local/tomcat/shared/classes/alfresco/extension/main-custom-context.xml
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.alfresco-repo.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/alfresco`)"
+      - "traefik.http.routers.alfresco-repo.rule=Host(`ged-engine.habeasdata.com.br`) && PathPrefix(`/alfresco`)"
       - "traefik.http.routers.alfresco-repo.entryPoints=http,https"
       - "traefik.http.services.alfresco-repo.loadbalancer.server.port=8080"
 
@@ -140,7 +140,7 @@ services:
       # - /opt/docker/alfresco/share/web-extension/site-data/extensions:/usr/local/tomcat/shared/classes/alfresco/web-extension/site-data/extensions
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.share.rule=Host(`ged.habeasdata.com.br`) && PathPrefix(`/share`)"
+      - "traefik.http.routers.share.rule=Host(`ged-engine.habeasdata.com.br`) && PathPrefix(`/share`)"
       - "traefik.http.routers.share.entryPoints=http,https"
       # Aplica a restrição de IP apenas aqui
       - "traefik.http.routers.share.middlewares=internal-whitelist"
